@@ -1,26 +1,32 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.BookDTO;
 import com.example.demo.model.Author;
 import com.example.demo.model.Book;
+import com.example.demo.repository.AuthorRepository;
 import com.example.demo.repository.BookRepository;
-import com.fasterxml.jackson.annotation.OptBoolean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
+
+
 
     @Autowired
-    public BookService(BookRepository bookRepository) {
+    public BookService(BookRepository bookRepository, AuthorRepository authorRepository) {
         this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
     }
+
+
 
     public List<Book> getBooks() {
         return bookRepository.findAll();
@@ -71,6 +77,17 @@ public class BookService {
 //        if (bookAuthor != null && bookAuthor.size() > 0 && !Objects.equals(book.getBooksAuthor(), bookAuthor)) {
 //            book.setBooksAuthor(bookAuthor);
 //        }
+    }
+
+    public void addAuthor(Author author) {
+        Optional<Author> authorOptional = authorRepository.findAuthorByAuthorName(author.getAuthorName());
+
+        if(authorOptional.isPresent()){
+            throw new IllegalStateException("ALREADY EXISTS");
+        } else {
+            authorRepository.save(author);
+        }
+        System.out.println(author);
     }
 
 //    public List<Book> getBooks() {

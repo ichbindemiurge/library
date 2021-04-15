@@ -1,35 +1,25 @@
-package com.example.demo.model;
+package com.example.demo.dto;
+
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table
-public class Book {
+public class BookDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     private int id;
     private String bookName;
     private String bookDescription;
+    private List<String> authorsIDsDTOList;
 
-    @ManyToMany(mappedBy = "booksList")
-    private List<Author> authorsList = new ArrayList<>();
-
-
-
-    public Book() {
+    public BookDTO() {
     }
 
-    public Book(String bookName, String bookDescription, List<Author> authorsList) {
+    public BookDTO(int id, String bookName, String bookDescription, List<String> authorsIDsDTOList) {
+        this.id = id;
         this.bookName = bookName;
         this.bookDescription = bookDescription;
-        this.authorsList = authorsList;
-    }
-
-    public void addAuthor(Author authorMap){
-        authorsList.add(authorMap);
+        this.authorsIDsDTOList = authorsIDsDTOList;
     }
 
     public int getId() {
@@ -56,13 +46,11 @@ public class Book {
         this.bookDescription = bookDescription;
     }
 
-    public List<Author> getAuthorsList() {
-        return authorsList;
+    public List<String> getAuthorsIDsDTOList() {
+        return authorsIDsDTOList;
     }
 
-    public void setAuthorsList(List<Author> author) {
-        this.authorsList = author;
+    public void setAuthorsIDsDTOList(List<String> authorsIDsDTOList) {
+        this.authorsIDsDTOList = authorsIDsDTOList;
     }
-
-
 }

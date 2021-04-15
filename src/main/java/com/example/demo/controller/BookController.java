@@ -1,12 +1,12 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Author;
+import com.example.demo.dto.BookDTO;
+import com.example.demo.mapping.MappingDTOtoClass;
 import com.example.demo.model.Book;
 import com.example.demo.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
@@ -14,21 +14,28 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
+    private final MappingDTOtoClass mappingDTOtoClass = new MappingDTOtoClass();
 
     @Autowired
     public BookController(BookService bookService) {
         this.bookService = bookService;
     }
 
+
     @GetMapping // api/book/bookid/paragraph/
     public List<Book> getBooks() {
         return bookService.getBooks();
     }
 
-    @PostMapping
-    public void addBook (@RequestBody Book book) {
-        bookService.addBook(book);
+    //TRY THIS
+    @GetMapping(path = "{bookID}")
+    public void testIDBOOK(@PathVariable("bookID") int bookID) {
+        //bookService.searchBook(bookID);
     }
+
+
+
+
 
     @DeleteMapping(path = "{bookID}")
     public void deleteBook(@PathVariable("bookID") int bookID) {

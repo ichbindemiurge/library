@@ -1,35 +1,22 @@
-package com.example.demo.model;
+package com.example.demo.dto;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
-@Entity
-@Table
-public class Author {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class AuthorDTO {
+
     private Long id;
     private String authorName;
     private LocalDate authorDOB;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Book> booksList = new ArrayList<>();
-
-
-
-    public Author() {
+    public AuthorDTO() {
     }
 
-    public Author(String authorName, LocalDate authorDOB) {
+    public AuthorDTO(Long id, String authorName, LocalDate authorDOB) {
+        this.id = id;
         this.authorName = authorName;
         this.authorDOB = authorDOB;
-    }
-
-    public void addBook(Book book){
-        this.booksList.add(book);
     }
 
     public Long getId() {

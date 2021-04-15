@@ -3,12 +3,15 @@ package com.example.demo.config;
 
 import com.example.demo.model.Author;
 import com.example.demo.model.Book;
+import com.example.demo.repository.AuthorRepository;
 import com.example.demo.repository.BookRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.management.modelmbean.ModelMBean;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -20,7 +23,7 @@ import java.util.List;
 public class BookConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner (BookRepository repository) {
+    CommandLineRunner commandLineRunner (BookRepository bookRepository, AuthorRepository authorRepository) {
         return args -> {
 
 
@@ -59,11 +62,19 @@ public class BookConfig {
                      authorListTwo
             );
 
-//            System.out.println(testOne.getAuthor());
-//            System.out.println(testTwo.toString());
 
+            for (Author author : authorListOne) {
+                author.addBook(testOne);
+            }
 
-            repository.saveAll(
+            for (Author author : authorListTwo) {
+                author.addBook(testTwo);
+            }
+
+            authorRepository.saveAll(authorListOne);
+            authorRepository.saveAll(authorListTwo);
+
+            bookRepository.saveAll(
                     List.of(testOne, testTwo)
             );
         };
