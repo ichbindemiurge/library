@@ -13,8 +13,7 @@ public class AuthorDTO {
     public AuthorDTO() {
     }
 
-    public AuthorDTO(Long id, String authorName, LocalDate authorDOB) {
-        this.id = id;
+    public AuthorDTO(String authorName, LocalDate authorDOB) {
         this.authorName = authorName;
         this.authorDOB = authorDOB;
     }

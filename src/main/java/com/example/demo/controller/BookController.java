@@ -34,7 +34,10 @@ public class BookController {
     }
 
 
-
+    @PostMapping
+    public void addBook (@RequestBody Book book) {
+        bookService.addBook(book);
+    }
 
 
     @DeleteMapping(path = "{bookID}")

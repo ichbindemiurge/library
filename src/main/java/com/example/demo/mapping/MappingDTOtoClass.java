@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -30,6 +31,22 @@ public class MappingDTOtoClass {
         book.setBookDescription(bookDTO.getBookDescription());
         //book.setAuthorsList(bookDTO.get);
         return book;
+    }
+
+    public AuthorDTO mapToAuthor (Author author) {
+        AuthorDTO authorDTO = new AuthorDTO();
+        authorDTO.setId(author.getId());
+        authorDTO.setAuthorName(author.getAuthorName());
+        authorDTO.setAuthorDOB(author.getAuthorDOB());
+        return authorDTO;
+    }
+
+    public Author mapAuthorToDTO (AuthorDTO authorDTO){
+        Author author = new Author();
+        author.setId(authorDTO.getId());
+        author.setAuthorName(authorDTO.getAuthorName());
+        author.setAuthorDOB(authorDTO.getAuthorDOB());
+        return author;
     }
 
 
