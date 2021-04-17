@@ -1,13 +1,17 @@
 package com.example.demo.dto;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDate;
 
 
 public class AuthorDTO {
 
-    private Long id;
+    private int id;
     private String authorName;
+
+
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate authorDOB;
 
     public AuthorDTO() {
@@ -18,11 +22,11 @@ public class AuthorDTO {
         this.authorDOB = authorDOB;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -4,14 +4,9 @@ import com.example.demo.dto.AuthorDTO;
 import com.example.demo.dto.BookDTO;
 import com.example.demo.model.Author;
 import com.example.demo.model.Book;
-import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 
 
-import java.time.LocalDate;
 import java.util.Collections;
-import java.util.Objects;
 
 
 public class MappingDTOtoClass {

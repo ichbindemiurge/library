@@ -5,13 +5,16 @@ import com.example.demo.model.Author;
 import com.example.demo.model.Book;
 import com.example.demo.repository.AuthorRepository;
 import com.example.demo.repository.BookRepository;
+import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.management.modelmbean.ModelMBean;
+import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -29,15 +32,22 @@ public class BookConfig {
 
             Author authorNameT = new Author(
                     "testNameAuthor1",
-                    LocalDate.of(1978, Month.AUGUST, 15)
+                    //DateFormat.getDateInstance().parse("1976-04-03")
+                    //new Date("1976-04-03")
+                    //DateFormat.getDateTimeInstance().parse("1976-04-03")
+                    LocalDate.of(1976, 2, 16)
             );
             Author authorNameY = new Author(
                     "testNameAuthor2",
-                    LocalDate.of(1960, Month.JULY, 25)
+                   // DateFormat.getDateInstance().parse("1960-06-25")
+                    //DateFormat.getDateTimeInstance().parse("1976-04-03")
+                    LocalDate.of(1976, 4, 3)
             );
             Author authorNameP = new Author(
                     "testNameAuthor3",
-                    LocalDate.of(1956, Month.JANUARY, 8)
+                   // DateFormat.getDateInstance().parse("1956-01-8")
+                    //DateFormat.getDateTimeInstance().parse("1976-04-03")
+                    LocalDate.of(1956, 1, 8)
             );
 
 

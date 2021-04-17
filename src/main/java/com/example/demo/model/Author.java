@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,8 +13,10 @@ public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private int id;
     private String authorName;
+
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate authorDOB;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -32,11 +36,11 @@ public class Author {
         this.booksList.add(book);
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
