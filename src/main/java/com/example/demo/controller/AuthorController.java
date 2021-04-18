@@ -32,12 +32,13 @@ public class AuthorController {
         authorService.getAuthor(authorName);
     }
 
-    @PutMapping(value = "/{authorID}")
-    public AuthorDTO updateAuthor(@RequestBody AuthorDTO authorDTO,
-                             @PathVariable("authorID") int authorID) {
+    @PutMapping(value = "{authorID}")
+    public AuthorDTO updateAuthor(
+                                  @PathVariable("authorID") String authorID,
+                                  @RequestParam(required = false) String authorName,
+                                  @RequestParam(required = false) LocalDate authorDOB) {
 
-
-        return authorService.updateAuthor(authorDTO);
+        return authorService.updateAuthor(authorID, authorName, authorDOB);
     }
 
     //@PathVariable("bookID") int bookID,
