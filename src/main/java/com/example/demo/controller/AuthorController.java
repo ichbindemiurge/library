@@ -41,9 +41,4 @@ public class AuthorController {
         return authorService.updateAuthor(authorID, authorName, authorDOB);
     }
 
-    //@PathVariable("bookID") int bookID,
-    //            @RequestParam(required = false) String bookName,
-    //            @RequestParam(required = false) List<Book> bookAuthor) {
-
-
 }
