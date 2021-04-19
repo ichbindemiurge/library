@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.AuthorDTO;
+import com.example.demo.dto.BookDTO;
 import com.example.demo.service.AuthorService;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,13 +33,23 @@ public class AuthorController {
         authorService.getAuthor(authorName);
     }
 
-    @PutMapping(value = "{authorID}")
-    public AuthorDTO updateAuthor(
-                                  @PathVariable("authorID") String authorID,
-                                  @RequestParam(required = false) String authorName,
-                                  @RequestParam(required = false) LocalDate authorDOB) {
+//    @PutMapping(value = "{authorID}") //re-write with @RequestBody AuthorDTO authorDTO
+//    public AuthorDTO updateAuthor(
+//                                  @PathVariable("authorID") String authorID,
+//                                  @RequestParam(required = false) String authorName,
+//                                  @RequestParam(required = false) LocalDate authorDOB) {
+//
+//        return authorService.updateAuthor(authorID, authorName, authorDOB);
+//    }
 
-        return authorService.updateAuthor(authorID, authorName, authorDOB);
+    @PutMapping
+    public AuthorDTO updateAuthor(@RequestBody AuthorDTO authorDTO) {
+        return authorService.updateAuthor(authorDTO);
+    }
+
+    @DeleteMapping(value = "{authorID}")
+    public void deleteAuthor(@PathVariable("authorID") String authorID) {
+        authorService.deleteAuthor(authorID);
     }
 
 }
