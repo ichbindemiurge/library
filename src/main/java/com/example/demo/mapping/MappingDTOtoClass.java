@@ -14,19 +14,21 @@ import java.util.List;
 
 public class MappingDTOtoClass {
 
+    private AuthorService authorService;
+
     public BookDTO mapToBookDTO (Book book) {
         BookDTO bookDTO = new BookDTO();
         bookDTO.setId(book.getId());
         bookDTO.setBookName(book.getBookName());
         bookDTO.setBookDescription(book.getBookDescription());
-//        bookDTO.setAuthorsIDsDTOList(book.getAuthorsList());
+        //bookDTO.setAuthorsIDsDTOList(book.getAuthorsList());
 
-//        List<Author> authorsList = book.getAuthorsList();
-//        List<String> authorIDs = new ArrayList<>(authorsList.size());
-//        for(Author author : authorsList){
-//            authorIDs.add(String.valueOf(author.getId()));
-//        }
-//        bookDTO.setAuthorsIDsDTOList(authorIDs);
+        List<Author> authorsList = book.getAuthorsList();
+        List<String> authorIDs = new ArrayList<>(authorsList.size());
+        for(Author author : authorsList){
+            authorIDs.add(String.valueOf(author.getId()));
+        }
+        bookDTO.setAuthorsIDsDTOList(authorIDs);
         return bookDTO;
     }
 
@@ -35,12 +37,12 @@ public class MappingDTOtoClass {
         book.setBookName(bookDTO.getBookName());
         book.setBookDescription(bookDTO.getBookDescription());
 
-//        List<String> authorIDs = bookDTO.getAuthorsIDsDTOList();
-//        List<Author> authorsList = new ArrayList<>(authorIDs.size());
-//        for(String authorID : authorIDs) {
-//            authorsList.add(authorService.getAuthorById(authorID));
-//        }
-//        book.setAuthorsList(authorsList);
+        List<String> authorIDs = bookDTO.getAuthorsIDsDTOList();
+        List<Author> authorsList = new ArrayList<>(authorIDs.size());
+        for(String authorID : authorIDs) {
+            authorsList.add(authorService.getAuthorById(authorID));
+        }
+        book.setAuthorsList(authorsList);
 
         return book;
     }
