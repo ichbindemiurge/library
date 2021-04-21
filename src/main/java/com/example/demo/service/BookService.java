@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.BookDTO;
+import com.example.demo.mapping.MappingDTOtoClass;
 import com.example.demo.model.Author;
 import com.example.demo.model.Book;
 import com.example.demo.repository.AuthorRepository;
@@ -17,6 +18,7 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
+    private MappingDTOtoClass mappingDTOtoClaas = new MappingDTOtoClass();
 
 
 
@@ -26,29 +28,33 @@ public class BookService {
         this.authorRepository = authorRepository;
     }
 
-
-
     public List<Book> getBooks() {
         return bookRepository.findAll();
     }
 
     @Transactional
-    public void addBook(Book book) {
-        Optional<Book> bookOptional = bookRepository.findBookByBookName(book.getBookName());
+    public void addBook(BookDTO bookDTO) {
 
-        if(bookOptional.isPresent()){
-            throw new IllegalStateException("NAME EXISTS");
+        if(bookDTO.getBookName().isEmpty()){
+            throw new IllegalStateException("EMPTY NAME");
         } else {
-            bookRepository.save(book);
+
+            bookRepository.save(mappingDTOtoClaas.mapToDTOBook(bookDTO));
         }
-        System.out.println(book);
+        System.out.println(bookDTO);
     }
 
     @Transactional
     public void deleteBook(int bookID) {
+        BookDTO bookDTO;
         if(!bookRepository.existsById(bookID)) {
             throw new IllegalStateException("NO SUCH BOOK");
         } else {
+            bookDTO = mappingDTOtoClaas.mapToBookDTO(bookRepository.findById(bookID).get());
+            if(!bookDTO.getAuthorsIDsDTOList().isEmpty()) {
+
+            }
+
             bookRepository.deleteById(bookID);
         }
     }

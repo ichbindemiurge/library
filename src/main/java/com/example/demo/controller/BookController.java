@@ -14,7 +14,6 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
-    private final MappingDTOtoClass mappingDTOtoClass = new MappingDTOtoClass();
 
     @Autowired
     public BookController(BookService bookService) {
@@ -35,8 +34,8 @@ public class BookController {
 
 
     @PostMapping
-    public void addBook (@RequestBody Book book) {
-        bookService.addBook(book);
+    public void addBook (@RequestBody BookDTO bookDTO) {
+        bookService.addBook(bookDTO);
     }
 
 
@@ -64,6 +63,8 @@ public class BookController {
             @RequestParam(required = true) int bookID){
         bookService.searchBook(bookID);
     }
+
+
 
     //serch books
 }
