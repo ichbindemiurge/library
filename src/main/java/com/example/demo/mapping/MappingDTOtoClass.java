@@ -62,6 +62,4 @@ public class MappingDTOtoClass {
         author.setAuthorDOB(authorDTO.getAuthorDOB());
         return author;
     }
-
-
 }
