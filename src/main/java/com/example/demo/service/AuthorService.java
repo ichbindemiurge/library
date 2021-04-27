@@ -104,6 +104,9 @@ public class AuthorService {
                 () -> new IllegalStateException("This author does not exist in the DB")
         );
         List<Book> linkedBooks = author.getBooksList(); // ALL books assigned to THAT author
+        List<Book> booksToDelete = new ArrayList<>();
+
+
 
         if(!linkedBooks.isEmpty()) {
             //check if this is the only author for the book
@@ -111,17 +114,25 @@ public class AuthorService {
 
                 List<Author> oneBookAuthors = book.getAuthorsList(); //  ONE particular book's authors
                 //has ONLY THAT author
-                if(oneBookAuthors.contains(author) && oneBookAuthors.size() == 1) {
+                if(oneBookAuthors.contains(author) && oneBookAuthors.size() == 1){
+                    booksToDelete.add(book);
+                    //book.removeAuthor(author) try this next time without separate if()
 
-                    //book.getAuthorsList().remove(author.getId());
-                    bookRepository.deleteById(book.getId());
-                }
-                author.removeBook(book);
+                } //else {
+//                    //author.removeBook(book);
+//                }
             }
-            //linkedBooks.forEach(author::removeBook); //i'm modifying the list i'm iterating over
+
+            if (!booksToDelete.isEmpty()){
+                booksToDelete.forEach(book -> book.removeAuthor(author));
+            }
         }
         authorRepository.deleteById(Integer.valueOf(authorID));
 
+    }
+
+    public void removeAuthorFromBook(Author author, Book books){
+        books.removeAuthor(author);
     }
 
 
