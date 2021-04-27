@@ -19,10 +19,9 @@ public class Author {
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate authorDOB;
 
+
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Book> booksList = new ArrayList<>();
-
-
 
     public Author() {
     }
@@ -32,8 +31,16 @@ public class Author {
         this.authorDOB = authorDOB;
     }
 
+    public List<Book> getBooksList() {
+        return booksList;
+    }
+
     public void addBook(Book book){
         this.booksList.add(book);
+    }
+
+    public void removeBook(Book book){
+        this.booksList.remove(book);
     }
 
     public int getId() {

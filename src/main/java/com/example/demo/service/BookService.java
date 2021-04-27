@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,82 +29,119 @@ public class BookService {
         this.authorRepository = authorRepository;
     }
 
-    public List<Book> getBooks() {
-        return bookRepository.findAll();
+
+    public List<BookDTO> getBooks() {
+        List<Book> allBooks = bookRepository.findAll();
+        List<BookDTO> bookDTOS = new ArrayList<>(allBooks.size());
+
+        for (Book book : allBooks) {
+            if(!book.getAuthorsList().isEmpty()) {
+                BookDTO bookDTO = mappingDTOtoClaas.bookToDTO(book);
+                bookDTO.setAuthorsIDsDTOList(getAuthorsIDsFromBook(book));
+                bookDTOS.add(bookDTO);
+            }
+        }
+        return bookDTOS;
     }
 
     @Transactional
     public void addBook(BookDTO bookDTO) {
+        List<Author> authorsToAdd = getAuthorsFromDTO(bookDTO);
 
         if(bookDTO.getBookName().isEmpty()){
             throw new IllegalStateException("EMPTY NAME");
         } else {
-
-            bookRepository.save(mappingDTOtoClaas.mapToDTOBook(bookDTO));
+            Book bookToSave = mappingDTOtoClaas.DTOToBook(bookDTO);
+            linkAuthor(authorsToAdd, bookToSave);
+            bookToSave.setAuthorsList(authorsToAdd);
+            bookRepository.save(bookToSave);
         }
-        System.out.println(bookDTO);
     }
 
     @Transactional
     public void deleteBook(int bookID) {
-        BookDTO bookDTO;
-        if(!bookRepository.existsById(bookID)) {
-            throw new IllegalStateException("NO SUCH BOOK");
-        } else {
-            bookDTO = mappingDTOtoClaas.mapToBookDTO(bookRepository.findById(bookID).get());
-            if(!bookDTO.getAuthorsIDsDTOList().isEmpty()) {
-
-            }
-
-            bookRepository.deleteById(bookID);
+        Book book = bookRepository.findById(bookID).orElseThrow(
+                () -> new IllegalStateException("This book does not exist in the DB")
+        );
+        if(!book.getAuthorsList().isEmpty()){
+            removeAuthorFromBook(book.getAuthorsList(), book);
         }
+        bookRepository.deleteById(bookID);
     }
 
     @Transactional
-    public void searchBook(int bookID) {
+    public BookDTO searchBook(String bookName) {
         System.out.println("BLBLLDSALDASDASDLADLA");
-            bookRepository.findById(bookID);
+            Book book = bookRepository.findBookByBookName(bookName).orElseThrow(
+                    () -> new IllegalStateException("This book does not exist in the DB")
+            );
+            BookDTO bookDTO = mappingDTOtoClaas.bookToDTO(book);
+            bookDTO.setAuthorsIDsDTOList(getAuthorsIDsFromBook(book));
+            return bookDTO;
     }
 
     @Transactional
-    public void updateBookFields(Book book) {
+    public BookDTO updateBookFields(BookDTO bookDTO) {
+        Book book = bookRepository.findById(bookDTO.getId()).orElseThrow(
+                () -> new IllegalStateException("This book does not exist in the DB")
+        );
 
-
-            book.setBookName(book.getBookName());
-
-//        Book book = bookRepository.findById(bookID).orElseThrow(()-> new IllegalStateException("something went terribly wrong"));
-//
-//        //bookName.isBlank() && bookAuthor
-//        // instead of params -> Book. do a validation for object
-//
-//        if (bookName != null && bookName.length() > 0 && !Objects.equals(book.getBookName(), bookName)) {
-//            book.setBookName(bookName);
-//        }
-//
-//        if (bookAuthor != null && bookAuthor.size() > 0 && !Objects.equals(book.getBooksAuthor(), bookAuthor)) {
-//            book.setBooksAuthor(bookAuthor);
-//        }
-    }
-
-    public void addAuthor(Author author) {
-        Optional<Author> authorOptional = authorRepository.findAuthorByAuthorName(author.getAuthorName());
-
-        if(authorOptional.isPresent()){
-            throw new IllegalStateException("ALREADY EXISTS");
-        } else {
-            authorRepository.save(author);
+        //bookName update
+        if (!bookDTO.getBookName().isEmpty()) {
+            book.setBookName(bookDTO.getBookName());
         }
-        System.out.println(author);
+
+        //book authors update
+        if (!bookDTO.getAuthorsIDsDTOList().isEmpty()) {
+            List<Author> authorsToAdd = getAuthorsFromDTO(bookDTO);
+            for (Author author : authorsToAdd) {
+                List<Author> existingAuthors = book.getAuthorsList();
+                if (!existingAuthors.contains(author)) {
+                    existingAuthors.add(author);
+                    author.addBook(book);
+                }
+            }
+        }
+
+        //book description update
+        String bookDescription = bookDTO.getBookDescription();
+        if (bookDescription != null) {
+            book.setBookDescription(bookDescription.trim());
+        }
+
+        return mappingDTOtoClaas.bookToDTO(book);
     }
 
-//    public List<Book> getBooks() {
-//        return List.of(
-//                new Book(
-//                        0,
-//                        "TestBookName",
-//                        "This book is about something",
-//                        Collections.singletonList("Author 1" + "Author 2" + "Author 3")
-//                )
-//        );
-//    }
+
+    public void linkAuthor(List<Author> authorList, Book book) {
+        //            Author author1 = authorRepository.findAuthorByAuthorName(a.getAuthorName()).orElseThrow(
+        //                    () -> new IllegalStateException("\"Authors List empty.\""));
+        authorList.forEach(author -> author.addBook(book));
+    }
+
+    public void removeAuthorFromBook(List<Author> authorList, Book book){
+        authorList.forEach(author -> author.removeBook(book));
+    }
+
+    public List<Author> getAuthorsFromDTO(BookDTO bookDTO) {
+        List<String> authorIDs = bookDTO.getAuthorsIDsDTOList();
+        List<Author> authors = new ArrayList<>(authorIDs.size());
+        for (String authorID : authorIDs) {
+            authorRepository.findById(Integer.valueOf(authorID)).ifPresent(authors::add);
+        }
+        return authors;
+    }
+
+    public List<String> getAuthorsIDsFromBook(Book book) {
+        List<Author> authors = book.getAuthorsList();
+        List<String> authorIDs = new ArrayList<>(authors.size());
+
+        for (Author author : authors) {
+            authorRepository.findById(author.getId()).ifPresent( a -> authorIDs.add(String.valueOf(a.getId())));
+        }
+        return authorIDs;
+    }
+
+
+
 }

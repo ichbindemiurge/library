@@ -3,11 +3,13 @@ package com.example.demo.controller;
 import com.example.demo.dto.AuthorDTO;
 import com.example.demo.dto.BookDTO;
 import com.example.demo.service.AuthorService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("api/authors")
 public class AuthorController {

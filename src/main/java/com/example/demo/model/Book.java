@@ -60,9 +60,9 @@ public class Book {
         return authorsList;
     }
 
-    public void setAuthorsList(List<Author> author) {
+    public Book setAuthorsList(List<Author> author) {
         this.authorsList = author;
+        return this;
     }
-
 
 }
