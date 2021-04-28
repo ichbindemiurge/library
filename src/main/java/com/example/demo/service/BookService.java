@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookService {
@@ -22,13 +21,11 @@ public class BookService {
     private MappingDTOtoClass mappingDTOtoClaas = new MappingDTOtoClass();
 
 
-
     @Autowired
     public BookService(BookRepository bookRepository, AuthorRepository authorRepository) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
     }
-
 
     public List<BookDTO> getBooks() {
         List<Book> allBooks = bookRepository.findAll();
@@ -130,7 +127,5 @@ public class BookService {
         }
         return authorIDs;
     }
-
-
 
 }

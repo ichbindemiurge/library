@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AuthorDTO;
-import com.example.demo.dto.BookDTO;
 import com.example.demo.mapping.MappingDTOtoClass;
 import com.example.demo.model.Author;
 import com.example.demo.model.Book;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.lang.reflect.Field;
 import java.util.*;
 
 @Service
@@ -35,7 +33,8 @@ public class AuthorService {
     @Transactional
     public List<AuthorDTO> getAllAuthors() {
         List<AuthorDTO> authorsListReturn = new ArrayList<>();
-        for (Author author : authorRepository.findAll()) {
+        List<Author> allAuthors = authorRepository.findAll();
+        for (Author author : allAuthors) {
             authorsListReturn.add(mappingDTOtoClass.DTOToAuthor(author));
         }
         return authorsListReturn;
@@ -75,5 +74,4 @@ public class AuthorService {
         linkedBooks.removeIf(book -> (book.getAuthorsList().size()==1 && book.getAuthorsList().contains(author)));
         authorRepository.deleteById(Integer.valueOf(authorID));
     }
-
 }
