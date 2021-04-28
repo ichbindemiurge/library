@@ -32,6 +32,11 @@ public class Book {
         authorsList.add(authorMap);
     }
 
+    public void removeAuthor(Author author){
+        authorsList.remove(author);
+    }
+
+
     public int getId() {
         return id;
     }
@@ -60,9 +65,9 @@ public class Book {
         return authorsList;
     }
 
-    public void setAuthorsList(List<Author> author) {
+    public Book setAuthorsList(List<Author> author) {
         this.authorsList = author;
+        return this;
     }
-
 
 }
