@@ -35,14 +35,6 @@ public class AuthorController {
         authorService.getAuthor(authorName);
     }
 
-//    @PutMapping(value = "{authorID}") //re-write with @RequestBody AuthorDTO authorDTO
-//    public AuthorDTO updateAuthor(
-//                                  @PathVariable("authorID") String authorID,
-//                                  @RequestParam(required = false) String authorName,
-//                                  @RequestParam(required = false) LocalDate authorDOB) {
-//
-//        return authorService.updateAuthor(authorID, authorName, authorDOB);
-//    }
 
     @PutMapping
     public AuthorDTO updateAuthor(@RequestBody AuthorDTO authorDTO) {
