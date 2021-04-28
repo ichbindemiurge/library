@@ -35,11 +35,9 @@ public class BookService {
         List<BookDTO> bookDTOS = new ArrayList<>(allBooks.size());
 
         for (Book book : allBooks) {
-            if(!book.getAuthorsList().isEmpty()) {
-                BookDTO bookDTO = mappingDTOtoClaas.bookToDTO(book);
-                bookDTO.setAuthorsIDsDTOList(getAuthorsIDsFromBook(book));
-                bookDTOS.add(bookDTO);
-            }
+            BookDTO bookDTO = mappingDTOtoClaas.bookToDTO(book);
+            bookDTO.setAuthorsIDsDTOList(getAuthorsIDsFromBook(book));
+            bookDTOS.add(bookDTO);
         }
         return bookDTOS;
     }
@@ -47,15 +45,10 @@ public class BookService {
     @Transactional
     public void addBook(BookDTO bookDTO) {
         List<Author> authorsToAdd = getAuthorsFromDTO(bookDTO);
-
-        if(bookDTO.getBookName().isEmpty()){
-            throw new IllegalStateException("EMPTY NAME");
-        } else {
-            Book bookToSave = mappingDTOtoClaas.DTOToBook(bookDTO);
-            linkAuthor(authorsToAdd, bookToSave);
-            bookToSave.setAuthorsList(authorsToAdd);
-            bookRepository.save(bookToSave);
-        }
+        Book bookToSave = mappingDTOtoClaas.DTOToBook(bookDTO);
+        linkAuthor(authorsToAdd, bookToSave);
+        bookToSave.setAuthorsList(authorsToAdd);
+        bookRepository.save(bookToSave);
     }
 
     @Transactional
@@ -71,7 +64,6 @@ public class BookService {
 
     @Transactional
     public BookDTO searchBook(String bookName) {
-        System.out.println("BLBLLDSALDASDASDLADLA");
             Book book = bookRepository.findBookByBookName(bookName).orElseThrow(
                     () -> new IllegalStateException("This book does not exist in the DB")
             );
@@ -108,14 +100,11 @@ public class BookService {
         if (bookDescription != null) {
             book.setBookDescription(bookDescription.trim());
         }
-
         return mappingDTOtoClaas.bookToDTO(book);
     }
 
 
     public void linkAuthor(List<Author> authorList, Book book) {
-        //            Author author1 = authorRepository.findAuthorByAuthorName(a.getAuthorName()).orElseThrow(
-        //                    () -> new IllegalStateException("\"Authors List empty.\""));
         authorList.forEach(author -> author.addBook(book));
     }
 
