@@ -43,32 +43,10 @@ public class AuthorService {
 
     @Transactional
     public void getAuthor(String authorName) {
-        mappingDTOtoClass.DTOToAuthor(authorRepository.findAuthorByAuthorName(authorName).get());
+        mappingDTOtoClass.DTOToAuthor(authorRepository.findAuthorByAuthorName(authorName).orElseThrow(
+                () -> new IllegalStateException("This author does not exist in the DB"))
+        );
     }
-
-
-    @Transactional
-    public Author getAuthorById(String authorID){
-        return authorRepository.findById(Integer.valueOf(authorID)).get();
-    }
-
-//    @Transactional
-//    public AuthorDTO updateAuthor(String authorID, String authorName, LocalDate authorDOB) {
-//        Author author;
-//        if (mappingDTOtoClass.DTOToAuthor(authorRepository.findById(Integer.valueOf(authorID)).get()) != null) {
-//            author = authorRepository.findById(Integer.valueOf(authorID)).get();
-//            System.out.println("ID EXISTS");
-//            if (!authorName.isEmpty()) {
-//                author.setAuthorName(authorName);
-//            }
-//            if(!authorDOB.toString().isEmpty()){
-//                author.setAuthorDOB(authorDOB);
-//            }
-//        } else {
-//            throw new IllegalStateException("something went terribly wrong");
-//        }
-//        return mappingDTOtoClass.DTOToAuthor(author);
-//    }
 
     @Transactional
     public AuthorDTO updateAuthor(AuthorDTO authorDTO) {
@@ -90,50 +68,12 @@ public class AuthorService {
 
     @Transactional
     public void deleteAuthor(String authorID){
-        //check if author exists
-        //check if author List<Book> is empty
-        //if above is yes -> proceed with deleting author
-
-        //if above is no -> check if this is the only author for the book
-
-        // if above is yes -> delete author AND book
-        // if no -> delete author from the AuthorList of that book
-        //delete author
-
         Author author = authorRepository.findById(Integer.valueOf(authorID)).orElseThrow(
                 () -> new IllegalStateException("This author does not exist in the DB")
         );
-        List<Book> linkedBooks = author.getBooksList(); // ALL books assigned to THAT author
-        List<Book> booksToDelete = new ArrayList<>();
-
-
-
-        if(!linkedBooks.isEmpty()) {
-            //check if this is the only author for the book
-            for (Book book : linkedBooks) { // if while going through ALL BOOKS of THAT author
-
-                List<Author> oneBookAuthors = book.getAuthorsList(); //  ONE particular book's authors
-                //has ONLY THAT author
-                if(oneBookAuthors.contains(author) && oneBookAuthors.size() == 1){
-                    booksToDelete.add(book);
-                    //book.removeAuthor(author) try this next time without separate if()
-
-                } //else {
-//                    //author.removeBook(book);
-//                }
-            }
-
-            if (!booksToDelete.isEmpty()){
-                booksToDelete.forEach(book -> book.removeAuthor(author));
-            }
-        }
+        List<Book> linkedBooks = author.getBooksList();
+        linkedBooks.removeIf(book -> (book.getAuthorsList().size()==1 && book.getAuthorsList().contains(author)));
         authorRepository.deleteById(Integer.valueOf(authorID));
-
     }
-
-    public void removeAuthorFromBook(Author author, Book books){
-        books.removeAuthor(author);
-    }
-
 
 }
