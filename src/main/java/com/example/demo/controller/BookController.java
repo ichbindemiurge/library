@@ -28,7 +28,11 @@ public class BookController {
 
     @PostMapping
     public void addBook (@RequestBody BookDTO bookDTO) {
-        bookService.addBook(bookDTO);
+        if(bookDTO.getAuthorsIDsDTOList().isEmpty() || bookDTO.getBookName().isEmpty()){
+            throw new IllegalStateException("The name or authors field is empty. Please check the data before proceeding");
+        } else {
+            bookService.addBook(bookDTO);
+        }
     }
 
 
